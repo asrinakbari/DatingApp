@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using DatingApp.Data;
 using DatingApp.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DatingApp.Controllers
 {
-    [ApiController]
-    [Route("api/[Controller]")]
-    public class UsersController : ControllerBase
+
+    public class UsersController : BaseApiController
     {
         private readonly DataContext context;
 
@@ -20,12 +20,14 @@ namespace DatingApp.Controllers
             this.context = context;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
             return await context.Users.ToListAsync();
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<AppUser>> GetUsers(int id)
         {
